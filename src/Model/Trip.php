@@ -50,8 +50,11 @@ class Trip {
     return $this->type;
   }
 
+  // To do: create a factory to have this mapping out of the model
+  // To do: add tests on factory
   public function getEmissionsCalculator(): EmissionsCalculatorInterface
   {
+    // To do: add enum for modes
     // To do: raise a warning when default is used
     return match($this->mode) {
       'tgv'   => new TrainEmissionsCalculator($this),

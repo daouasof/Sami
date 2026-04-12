@@ -12,6 +12,7 @@ abstract class AbstractEmissionsCalculator implements EmissionsCalculatorInterfa
   )
   {}
 
+  // To do: add tests
   public function calculateDistance(): int {
     return $this->trip->getOneWayDistance() * ($this->trip->getRoundTrip() ? 2 : 1) * $this->trip->getPeople();
   }

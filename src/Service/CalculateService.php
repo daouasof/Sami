@@ -6,6 +6,9 @@ use App\Dto\CalculateDto;
 
 class CalculateService {
 
+
+  // To do: refactor that function for more readability
+  // To do: create tests
   public function calculate(CalculateDto $dto): array {
    $totalDistance = 0;
     $totalEmissions = 0;

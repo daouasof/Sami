@@ -10,6 +10,8 @@ class PlaneEmissionsCalculator extends AbstractEmissionsCalculator {
     0 => 258
   ];
 
+  // To do: refactor that method
+  // To do: add tests
   protected function getEmissionFactor():float {
     foreach ($this->emissionFactor as $limit => $value) {
       if ($this->trip->getOneWayDistance() >= $limit) {
