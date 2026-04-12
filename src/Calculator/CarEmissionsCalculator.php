@@ -9,10 +9,6 @@ class CarEmissionsCalculator extends AbstractEmissionsCalculator {
     "gasoline" => 2.81
   ];
 
-  public function calculateDistance(): int {
-    return $this->trip->getOneWayDistance() * ($this->trip->getRoundTrip() ? 2 : 1) * $this->trip->getPeople();
-  }
-
   public function calculateEmissions():int {
     return round($this->calculateDistance() * $this->getEmissionFactor() / $this->trip->getPeople());
   }

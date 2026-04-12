@@ -11,7 +11,9 @@ abstract class AbstractEmissionsCalculator {
   )
   {}
 
-  abstract public function calculateDistance(): int;
+  public function calculateDistance(): int {
+    return $this->trip->getOneWayDistance() * ($this->trip->getRoundTrip() ? 2 : 1) * $this->trip->getPeople();
+  }
 
   abstract protected function getEmissionFactor(): float;
 
