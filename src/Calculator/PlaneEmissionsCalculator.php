@@ -18,8 +18,4 @@ class PlaneEmissionsCalculator extends AbstractEmissionsCalculator {
     }
     return 0;
   }
-
-  public function calculateEmissions():int {
-    return round($this->calculateDistance() * $this->getEmissionFactor());
-  }
 }

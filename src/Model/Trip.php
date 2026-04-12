@@ -2,6 +2,13 @@
 
 namespace App\Model;
 
+use App\Calculator\CarEmissionsCalculator;
+use App\Calculator\DefaultEmissionsCalculator;
+use App\Calculator\Interface\EmissionsCalculatorInterface;
+use App\Calculator\PlaneEmissionsCalculator;
+use App\Calculator\TrainEmissionsCalculator;
+
+
 class Trip {
 
   public function __construct(
@@ -41,5 +48,16 @@ class Trip {
   public function getType(): ?string
   {
     return $this->type;
+  }
+
+  public function getEmissionsCalculator(): EmissionsCalculatorInterface
+  {
+    // To do: raise a warning when default is used
+    return match($this->mode) {
+      'tgv'   => new TrainEmissionsCalculator($this),
+      'car'   => new CarEmissionsCalculator($this),
+      'plane' => new PlaneEmissionsCalculator($this),
+      default => new DefaultEmissionsCalculator($this),
+    };
   }
 }

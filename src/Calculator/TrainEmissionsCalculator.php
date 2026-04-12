@@ -10,8 +10,4 @@ class TrainEmissionsCalculator extends AbstractEmissionsCalculator {
     return $this->emissionFactor;
   }
 
-  public function calculateEmissions():int {
-    return round($this->calculateDistance() * $this->getEmissionFactor());
-  }
-
 }

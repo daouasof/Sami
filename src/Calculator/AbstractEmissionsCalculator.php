@@ -3,8 +3,9 @@
 namespace App\Calculator;
 
 use App\Model\Trip;
+use App\Calculator\Interface\EmissionsCalculatorInterface;
 
-abstract class AbstractEmissionsCalculator {
+abstract class AbstractEmissionsCalculator implements EmissionsCalculatorInterface {
 
   public function __construct(
     protected Trip $trip
@@ -17,5 +18,8 @@ abstract class AbstractEmissionsCalculator {
 
   abstract protected function getEmissionFactor(): float;
 
-  abstract public function calculateEmissions():int;
+
+  public function calculateEmissions():int {
+    return round($this->calculateDistance() * $this->getEmissionFactor());
+  }
 }
