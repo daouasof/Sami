@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\DTO\CalculateDto;
+use App\Service\CalculateService;
+use App\Model\Trip;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,68 +12,34 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ApiController extends AbstractController
 {
+
+    // To do: add E2E test with happy path, empty travels, missing key in travels
     #[Route(
         path: '/calculate',
         name: 'calculate_emissions',
         methods: ['POST'],
         format: 'json',
     )]
-    public function calculate(Request $request): Response
+    public function calculate(Request $request, CalculateService $service): Response
     {
         $body = \json_decode($request->getContent(), true);
 
-        $total = 0;
+        // TO DO : add data validation before creating DTO
+
+        $trips = [];
         foreach ($body['travels'] as $travel) {
-            if ($travel['mode'] === 'plane') {
-                if ($travel['distance'] < 1000) {
-                    $total += $travel['people'] * $travel['distance'] * 258;
-                    if ($travel['round_trip']) {
-                        $total += $travel['people'] * $travel['distance'] * 258;
-                    }
-                } else if ($travel['distance'] < 3500) {
-                    $total += $travel['people'] * $travel['distance'] * 187;
-                    if ($travel['round_trip']) {
-                        $total += $travel['people'] * $travel['distance'] * 187;
-                    }
-                } else {
-                    $total += $travel['people'] * $travel['distance'] * 152;
-                    if ($travel['round_trip']) {
-                        $total += $travel['people'] * $travel['distance'] * 152;
-                    }
-                }
-            } else if ($travel['mode'] === 'car') {
-                if (!\array_key_exists('type', $travel)) {
-                    $total += $travel['people'] * $travel['distance'] * 193;
-                    if ($travel['round_trip']) {
-                        $total += $travel['people'] * $travel['distance'] * 193;
-                    }
-                } else {
-                    if ($travel['type'] === 'diesel') {
-                        // 3.16 kgCO2e/l for diesel
-                        $fe = (3.16 * 1000) * ($travel['mileage'] / 100);
-                        $total += $travel['people'] * $travel['distance'] * $fe;
-                        if ($travel['round_trip']) {
-                            $total += $travel['people'] * $travel['distance'] * $fe;
-                        }
-                    } else if ($travel['type'] === 'gasoline') {
-                        // 2.81 kgCO2e/l for gasoline
-                        $fe = (2.81 * 1000) * ($travel['mileage'] / 100);
-                        $total += $travel['people'] * $travel['distance'] * $fe;
-                        if ($travel['round_trip']) {
-                            $total += $travel['people'] * $travel['distance'] * $fe;
-                        }
-                    }
-                }
-            } else if ($travel['mode'] === 'tgv') {
-                $total += $travel['people'] * $travel['distance'] * 1.7;
-                if ($travel['round_trip']) {
-                    $total += $travel['people'] * $travel['distance'] * 1.7;
-                }
-            }
+          $trips[] = new Trip(
+            mode: $travel['mode'],
+            oneWayDistance: $travel['distance'],
+            roundTrip: $travel['round_trip'],
+            people: $travel['people'],
+            mileage: $travel['mileage'] ?? null,
+            type: $travel['type'] ?? null
+          );
         }
 
-        return $this->json([
-            'total_emissions' => $total,
-        ]);
-    }
+        $result = $service->calculate(new CalculateDto($trips));
+
+        return $this->json($result);
+      }
 }
