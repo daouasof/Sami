@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Dto\CalculateDto;
+use App\DTO\CalculateDto;
 use App\Service\CalculateService;
 use App\Model\Trip;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,8 +34,9 @@ class ApiController extends AbstractController
             mileage: $travel['mileage'] ?? null,
             type: $travel['type'] ?? null
           );
+        }
 
-        $service->calculate(new CalculateDto($trips));
+        $result = $service->calculate(new CalculateDto($trips));
 
         // $total = 0;
         // foreach ($body['travels'] as $travel) {
@@ -90,7 +91,8 @@ class ApiController extends AbstractController
         // return $this->json([
         //     'total_emissions' => $total,
         // ]);
-        return $this->json([]);
+
+
+        return $this->json($result);
       }
-    }
 }
