@@ -2,6 +2,8 @@
 
 namespace App\Calculator;
 
+use App\Model\Trip;
+
 class PlaneEmissionsCalculator extends AbstractEmissionsCalculator {
 
   private array $emissionFactor = [
@@ -12,9 +14,9 @@ class PlaneEmissionsCalculator extends AbstractEmissionsCalculator {
 
   // To do: refactor that method
   // To do: add tests
-  protected function getEmissionFactor():float {
+  protected function getEmissionFactor(Trip $trip):float {
     foreach ($this->emissionFactor as $limit => $value) {
-      if ($this->trip->getOneWayDistance() >= $limit) {
+      if ($trip->getOneWayDistance() >= $limit) {
         return $value;
       }
     }

@@ -20,8 +20,8 @@ class CalculateService {
 
     foreach ($dto->getTrips() as $trip) {
       $calculator = $this->calculatorFactory->getCalculator($trip);
-      $tripDistance = $calculator->calculateDistance();
-      $tripEmissions = $calculator->calculateEmissions();
+      $tripDistance = $calculator->calculateDistance($trip);
+      $tripEmissions = $calculator->calculateEmissions($trip);
 
       $byMode[$trip->getMode()] ??= ['distance' => 0, 'emissions' => 0];
       $byMode[$trip->getMode()]['distance'] += $tripDistance;
