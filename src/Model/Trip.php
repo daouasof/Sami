@@ -2,13 +2,6 @@
 
 namespace App\Model;
 
-use App\Calculator\CarEmissionsCalculator;
-use App\Calculator\DefaultEmissionsCalculator;
-use App\Calculator\Interface\EmissionsCalculatorInterface;
-use App\Calculator\PlaneEmissionsCalculator;
-use App\Calculator\TrainEmissionsCalculator;
-
-
 class Trip {
 
   public function __construct(
@@ -48,19 +41,5 @@ class Trip {
   public function getType(): ?string
   {
     return $this->type;
-  }
-
-  // To do: create a factory to have this mapping out of the model
-  // To do: add tests on factory
-  public function getEmissionsCalculator(): EmissionsCalculatorInterface
-  {
-    // To do: add enum for modes
-    // To do: raise a warning when default is used
-    return match($this->mode) {
-      'tgv'   => new TrainEmissionsCalculator($this),
-      'car'   => new CarEmissionsCalculator($this),
-      'plane' => new PlaneEmissionsCalculator($this),
-      default => new DefaultEmissionsCalculator($this),
-    };
   }
 }
