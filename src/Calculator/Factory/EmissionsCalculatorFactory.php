@@ -14,10 +14,10 @@ class EmissionsCalculatorFactory {
   public function getCalculator(Trip $trip): EmissionsCalculatorInterface
   {
     return match($trip->getMode()) {
-      'tgv'   => new TrainEmissionsCalculator($trip),
-      'car'   => new CarEmissionsCalculator($trip),
-      'plane' => new PlaneEmissionsCalculator($trip),
-      default => new DefaultEmissionsCalculator($trip),
+      'tgv'   => new TrainEmissionsCalculator(),
+      'car'   => new CarEmissionsCalculator(),
+      'plane' => new PlaneEmissionsCalculator(),
+      default => new DefaultEmissionsCalculator(),
     };
   }
 }
