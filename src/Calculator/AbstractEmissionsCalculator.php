@@ -7,20 +7,15 @@ use App\Calculator\Interface\EmissionsCalculatorInterface;
 
 abstract class AbstractEmissionsCalculator implements EmissionsCalculatorInterface {
 
-  public function __construct(
-    protected Trip $trip
-  )
-  {}
-
   // To do: add tests
-  public function calculateDistance(): int {
-    return $this->trip->getOneWayDistance() * ($this->trip->getRoundTrip() ? 2 : 1) * $this->trip->getPeople();
+  public function calculateDistance(Trip $trip): int {
+    return $trip->getOneWayDistance() * ($trip->getRoundTrip() ? 2 : 1) * $trip->getPeople();
   }
 
-  abstract protected function getEmissionFactor(): float;
+  abstract protected function getEmissionFactor(Trip $trip): float;
 
 
-  public function calculateEmissions():int {
-    return round($this->calculateDistance() * $this->getEmissionFactor());
+  public function calculateEmissions(Trip $trip):int {
+    return round($this->calculateDistance($trip) * $this->getEmissionFactor($trip));
   }
 }

@@ -3,9 +3,13 @@
 namespace App\Service;
 
 use App\Dto\CalculateDto;
+use App\Calculator\Factory\EmissionsCalculatorFactory;
 
 class CalculateService {
 
+  public function __construct(
+    private EmissionsCalculatorFactory $calculatorFactory
+  ) {}
 
   // To do: refactor that function for more readability
   // To do: create tests
@@ -15,9 +19,9 @@ class CalculateService {
     $byMode = [];
 
     foreach ($dto->getTrips() as $trip) {
-      $calculator = $trip->getEmissionsCalculator();
-      $tripDistance = $calculator->calculateDistance();
-      $tripEmissions = $calculator->calculateEmissions();
+      $calculator = $this->calculatorFactory->getCalculator($trip);
+      $tripDistance = $calculator->calculateDistance($trip);
+      $tripEmissions = $calculator->calculateEmissions($trip);
 
       $byMode[$trip->getMode()] ??= ['distance' => 0, 'emissions' => 0];
       $byMode[$trip->getMode()]['distance'] += $tripDistance;

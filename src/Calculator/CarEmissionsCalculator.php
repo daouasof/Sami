@@ -2,6 +2,8 @@
 
 namespace App\Calculator;
 
+use App\Model\Trip;
+
 class CarEmissionsCalculator extends AbstractEmissionsCalculator {
 
   private array $emissionFactor = [
@@ -10,14 +12,14 @@ class CarEmissionsCalculator extends AbstractEmissionsCalculator {
   ];
 
   // To Do: add tests
-  public function calculateEmissions():int {
-    return round($this->calculateDistance() * $this->getEmissionFactor() / $this->trip->getPeople());
+  public function calculateEmissions(Trip $trip):int {
+    return round($this->calculateDistance($trip) * $this->getEmissionFactor($trip) / $trip->getPeople());
   }
 
-  protected function getEmissionFactor():float {
-    if($this->trip->getType() === null) {
+  protected function getEmissionFactor(Trip $trip):float {
+    if($trip->getType() === null) {
       return 193;
     }
-    return ($this->emissionFactor[$this->trip->getType()] * 1000) * ($this->trip->getMileage() / 100);
+    return ($this->emissionFactor[$trip->getType()] * 1000) * ($trip->getMileage() / 100);
   }
 }
